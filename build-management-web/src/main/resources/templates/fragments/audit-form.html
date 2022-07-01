@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<th:block layout:fragment="audit-form">
+	<div class="row" >
+	    <div class="form-group col-md-6">
+	        <label for="criadoPor" class="col-form-label">Criado Por</label>
+	        <input disabled type="text" th:field="*{criadoPor}" class="form-control" id="criadoPor">
+	        <span th:if="${#fields.hasErrors('criadoPor')}" th:errors="*{criadoPor}" class="text-danger"></span>
+	    </div>
+	    
+	    <div class="form-group col-md-6">
+	        <label for="dtCriacao" class="col-form-label">Criado Em</label>
+	        <input disabled type="text" th:field="*{dtCriacao}" class="form-control" id="dtCriacao">
+	        <span th:if="${#fields.hasErrors('dtCriacao')}" th:errors="*{dtCriacao}" class="text-danger"></span>
+	    </div>
+	</div>
+	
+	<div class="row">
+	    <div class="form-group col-md-6">
+	        <label for="alteradoPor" class="col-form-label">Alterado Por</label>
+	        <input disabled type="text" th:field="*{alteradoPor}" class="form-control" id="alteradoPor">
+	        <span th:if="${#fields.hasErrors('alteradoPor')}" th:errors="*{alteradoPor}" class="text-danger"></span>
+	    </div>
+	    
+	    <div class="form-group col-md-6">
+	        <label for="dtAlteracao" class="col-form-label">Alterado Em</label>
+	        <input disabled type="text" th:field="*{dtAlteracao}" class="form-control" id="dtAlteracao">
+	        <span th:if="${#fields.hasErrors('dtAlteracao')}" th:errors="*{dtAlteracao}" class="text-danger"></span>
+	    </div>
+	</div>
+</th:block>

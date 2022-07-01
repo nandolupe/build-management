@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layouts/template-logado}">
+
+<div layout:fragment="breadcrumb">
+	<div class="d-flex justify-content-between align-items-center">
+	  <ol>
+	    <li><a href="/index" th:text="#{company.name}"></a></li>
+	    <li th:text="#{manutencao.default.label}" ></li >
+	    <li th:text="#{manutencao.processo.label}"></li >
+	    <li th:text="#{manutencao.formulario.label}"></li >
+	  </ol>
+	</div>	
+</div >
+
+
+<th:block layout:fragment="page_content">
+	<form action="#" th:action="${processo.idProcesso == null} ? @{/processo/add} : @{/processo/update/{id}(id=${processo.idProcesso})}" th:object="${processo}" method="post">
+        <input type="hidden" th:field="*{idProcesso}" id="idProcesso" />
+		<!-- Page Heading -->
+		<h1 class="h3 mb-4 text-gray-800" th:text="#{manutencao.processo.label.h2}"></h1>
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-5">
+			<div class="card-header py-3">
+				<div class="col-md-4 float-right">
+					<input type="submit" class="btn btn-primary float-right" value="Salvar">
+					<a href="/processo/list" class="btn btn-primary float-right mr-1"
+						th:text="#{manutencao.default.button.voltar}"></a>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<input type="hidden" th:field="*{idProcesso}" id="idProcesso" />
+			
+				<div class="row">
+					<div class="form-group col-md-6">
+						<label for="codigo" class="col-form-label">Código</label>
+                        <input type="text" th:field="*{codigo}" class="form-control text-uppercase" id="codigo" required placeholder="Código do Processo">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="nomeProcesso" class="col-form-label">Nome Processo</label>
+                        <input type="text" th:field="*{nomeProcesso}" class="form-control text-uppercase" id="nomeProcesso" required placeholder="Nome do Processo">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('nomeProcesso')}" th:errors="*{nomeProcesso}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="valorCusto" class="col-form-label">Valor de Custo</label>
+                        <input type="text" th:field="*{valorCusto}" class="form-control" id="valorCusto" data-mask="###.###.###.###.###,00" data-mask-reverse="true" required placeholder="Valor de Custo">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('valorCusto')}" th:errors="*{valorCusto}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="valorVenda" class="col-form-label">Valor de Venda</label>
+                        <input type="text" th:field="*{valorVenda}" class="form-control" id="valorVenda" data-mask="###.###.###.###.###,00" data-mask-reverse="true" required placeholder="Valor de Venda">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('valorVenda')}" th:errors="*{valorVenda}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="tempoExecucao" class="col-form-label">Tempo Execução (min)</label>
+                        <input type="text" th:field="*{tempoExecucao}" class="form-control" id="tempoExecucao" required placeholder="Tempo de Execução">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('tempoExecucao')}" th:errors="*{tempoExecucao}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="status" class="col-form-label">Status</label>
+						<select type="text" th:field="*{status}" required class="form-control" id="status">
+							<option value="">Selecione</option>
+							<option value="ATIVO">ATIVO</option>
+							<option value="INATIVO">INATIVO</option>
+						</select>
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+					</div>
+				</div>
+			
+				<th:block layout:insert="fragments/audit-form"></th:block>
+			</div>
+	</form>
+</th:block>

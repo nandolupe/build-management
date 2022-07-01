@@ -1,0 +1,19 @@
+server: 
+  port: 8090
+
+spring: 
+  application: 
+    name: locacao-veiculos-web
+  profiles:
+    active: dev
+        
+  cloud: 
+    config: 
+      uri: http://config-server:8888/config-server
+
+locacao: 
+  veiculos:
+    api: 
+      endpoint: http://locacao-veiculos-api:8095
+    mq: 
+     endpoint: http://locacao-veiculos-mq:8070

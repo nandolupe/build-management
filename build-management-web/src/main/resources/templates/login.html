@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/template-deslogado}">
+
+<th:block layout:fragment="breadcrumb">
+	<div class="d-flex justify-content-between align-items-center">
+		<ol>
+			<li><a href="/index" th:text="#{company.name}"></a></li>
+			<li> Login</li>
+		</ol>
+	</div>
+</th:block>
+
+<div class="container" layout:fragment="page_content">
+	<div class="row " style="margin-top: 10px;" >
+		<div class="col-md-3">
+			<form th:action="@{/login}" method="post">
+				        
+	        	<div class="form-group col-md-12">
+                    <label for="username" class="col-form-label">Username</label>
+                    <input type="text" class="form-control" placeholder="Username" name="username"/>
+                </div>
+                
+                <div class="form-group col-md-12">
+                    <label for="password" class="col-form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Password" />
+                </div>
+                <br />
+	            <div><input type="submit" class="btn btn-secondary" value="Login"/></div>
+	        </form>
+		</div>
+	</div>
+</div>

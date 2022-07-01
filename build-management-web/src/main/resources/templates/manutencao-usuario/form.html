@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/template-logado}">
+
+<div layout:fragment="breadcrumb">
+	<div class="d-flex justify-content-between align-items-center">
+		<ol>
+			<li><a href="/index" th:text="#{company.name}"></a></li>
+			<li th:text="#{manutencao.default.label}"></li>
+			<li th:text="#{manutencao.usuario.label}"></li>
+			<li th:text="#{manutencao.formulario.label}"></li>
+		</ol>
+	</div>
+</div>
+
+
+<th:block layout:fragment="page_content">
+	<form action="#"
+		th:action="${usuario.id == null} ? @{/usuario/add} : @{/usuario/update/{id}(id=${usuario.id})}"
+		th:object="${usuario}" method="post">
+		<!-- Page Heading -->
+		<h1 class="h3 mb-4 text-gray-800" th:text="#{manutencao.usuario.label.h2}"></h1>
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-5">
+			<div class="card-header py-3">
+				<div class="col-md-4 float-right">
+					<input type="submit" class="btn btn-primary float-right" value="Salvar">
+					<a href="/usuario/list" class="btn btn-primary float-right mr-1"
+						th:text="#{manutencao.default.button.voltar}"></a>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<input type="hidden" th:field="*{id}" id="id" />
+
+				<div class="row">
+					
+					
+					<div class="form-group col-md-6" th:if="${usuario.id == null}" >
+						<label for="username" class="col-form-label">Login</label>
+						<input type="text" th:field="*{username}" class="form-control" id="login" placeholder="Login">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+					</div>
+					
+					<div class="form-group col-md-6" th:if="${usuario.id != null}" >
+						<label for="username" class="col-form-label">Login</label>
+						<input type="text" th:field="*{username}" class="form-control" id="login" placeholder="Login">
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="name" class="col-form-label">Nome</label>
+						<input type="text" th:field="*{name}" class="form-control text-uppercase" id="name" placeholder="Nome">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="password" class="col-form-label">Senha</label>
+						<input type="text" th:field="*{password}" class="form-control" id="password" placeholder="Senha">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="email" class="col-form-label">E-mail</label>
+						<input type="text" th:field="*{email}" class="form-control text-uppercase" id="email" placeholder="E-mail">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+					</div>
+
+					<div class="form-group col-md-6"
+						th:if="${#authorization.expression('getPrincipal().isAdministrador()')}">
+						<label for="tipoAcesso" class="col-form-label">Tipo Acesso</label>
+						<select type="text" th:field="*{tipoAcesso}" required class="form-control" id="tipoAcesso">
+							<option value="">Selecione</option>
+							<option value="EMPRESA">EMPRESA</option>
+							<option value="INTERNO">INTERNO</option>
+
+						</select>
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('tipoAcesso')}" th:errors="*{tipoAcesso}"></div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="enabled" class="col-form-label">Status</label>
+						<select type="text" th:field="*{enabled}" required class="form-control" id="enabled">
+							<option value="">Selecione</option>
+							<option value="true">ATIVO</option>
+							<option value="false">INATIVO</option>
+						</select>
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('enabled')}" th:errors="*{enabled}"></div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="locked" class="col-form-label">Locked</label>
+						<select type="text" th:field="*{locked}" required class="form-control" id="locked">
+							<option value="">Selecione</option>
+							<option value="true">SIM</option>
+							<option value="false">NAO</option>
+						</select>
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('locked')}" th:errors="*{locked}"></div>
+					</div>
+				</div>
+
+				<th:block layout:insert="fragments/audit-form"></th:block>
+			</div>
+			
+			<div class="card-body">
+				<div>
+					<div class="row">
+						<div class="col-md-6">
+							<h4 class="my-5">Permissões</h4>
+							<div class="row">
+								<ul>
+									<th:block th:each="papelIndex, papelStat : ${papeis}">
+										<li>
+											<input type="checkbox" th:name="|papeis[${papelStat.index}]|"
+												th:value="${papelIndex.idPapel}"
+												th:field="*{papeis[__${papelStat.index}__]}" />
+											<label th:text="${papelIndex.nome}"></label>
+										</li>
+									</th:block>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</form>
+</th:block>

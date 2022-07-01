@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layouts/template-logado}">
+
+<div layout:fragment="breadcrumb">
+	<div class="d-flex justify-content-between align-items-center">
+	  <ol>
+	    <li><a href="/index" th:text="#{company.name}"></a></li>
+	    <li th:text="#{manutencao.default.label}" ></li >
+	    <li th:text="#{manutencao.cliente.label}"></li >
+	    <li th:text="#{manutencao.formulario.label}"></li >
+	  </ol>
+	</div>	
+</div >
+
+
+<th:block layout:fragment="page_content">
+    <form action="#" th:action="${orcamento.idOrcamento == null} ? @{/orcamento/add} : @{/orcamento/update/{id}(id=${orcamento.idOrcamento})}" th:object="${orcamento}" method="post">
+		 <input type="hidden" th:field="*{idOrcamento}" id="idOrcamento" />
+		
+		<!-- Page Heading -->
+		<h1 class="h3 mb-4 text-gray-800" th:text="#{manutencao.orcamento.label.h2}"></h1>
+	
+	
+		<!-- DataTales Example -->
+		<div class="card shadow mb-5">
+			<div class="card-header py-3">
+				<div class="col-md-4 float-right">
+					<input type="submit" class="btn btn-primary float-right" value="Salvar">
+					<a href="/orcamento/list" class="btn btn-primary float-right mr-1"
+						th:text="#{manutencao.default.button.voltar}"></a>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div class="row">
+					<div class="form-group col-md-12">
+                        <label for="cliente" class="col-form-label">Cliente</label>
+                        <select type="text" th:field="*{cliente}" required class="form-control" id="cliente">
+                        	<option value="" >Selecione</option>
+                        	<option th:each="clienteIndex, clienteStat : ${availableClientes}" th:value="${clienteIndex.idCliente}" th:text="${clienteIndex.cnpjCpf} + ' - ' + ${clienteIndex.nomeCliente}" ></option>
+                        </select  >
+                        <span th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="text-danger"></span>
+                    </div>
+				</div>
+			
+			
+                <div class="row">
+                	<div class="form-group col-md-6">
+                        <label for="codigo" class="col-form-label">Código do Orçamento</label>
+                        <input type="text" th:field="*{codigo}" class="form-control" id="codigo" required placeholder="Código do Orçamento">
+                        <span th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}" class="text-danger"></span>
+                    </div>
+                	
+                	<div class="form-group col-md-6">
+                        <label for="status" class="col-form-label">Status</label>
+                        <select type="text" th:field="*{status}" required class="form-control" id="status">
+                        	<option value="" >Selecione</option>
+                        	<option value="ATIVO" >ATIVO</option>
+                        	<option value="INATIVO" >INATIVO</option>
+                        </select  >
+                        <span th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="text-danger"></span>
+                    </div>
+                	
+                	<div class="form-group col-md-6">
+                        <label for="dataEmissao" class="col-form-label">Data de Emissão</label>
+                        <input type="date" th:field="*{dataEmissao}" class="form-control" id="dataEmissao" placeholder="Data de Emissão">
+                        <span th:if="${#fields.hasErrors('dataEmissao')}" th:errors="*{dataEmissao}" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                        <label for="dataExpiracao" class="col-form-label">Data de Expiração</label>
+                        <input type="date" th:field="*{dataExpiracao}" class="form-control" id="dataExpiracao" placeholder="Data de Expiração">
+                        <span th:if="${#fields.hasErrors('dataExpiracao')}" th:errors="*{dataExpiracao}" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    
+                     <div class="form-group col-md-6">
+                        <label for="valorTaxaEntrega" class="col-form-label">Taxa de Entrega</label>
+                        <input type="text" th:field="*{valorTaxaEntrega}" class="form-control" id="valorTaxaEntrega" required >
+                        <span th:if="${#fields.hasErrors('valorTaxaEntrega')}" th:errors="*{valorTaxaEntrega}" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                        <label for="valorDesconto" class="col-form-label">Valor de Desconto</label>
+                        <input type="text" th:field="*{valorDesconto}" class="form-control" id="valorDesconto" required >
+                        <span th:if="${#fields.hasErrors('valorDesconto')}" th:errors="*{valorDesconto}" class="text-danger"></span>
+                    </div>
+                    
+                     <div class="form-group col-md-6">
+                        <label for="valorTotalCusto" class="col-form-label">Valor de Custo</label>
+                        <input type="text" th:field="*{valorTotalCusto}" class="form-control" disabled id="valorTotalCusto" required >
+                        <span th:if="${#fields.hasErrors('valorTotalCusto')}" th:errors="*{valorTotalCusto}" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                        <label for="valorTotalVenda" class="col-form-label">Valor de Venda</label>
+                        <input type="text" th:field="*{valorTotalVenda}" class="form-control" disabled id="valorTotalVenda" required >
+                        <span th:if="${#fields.hasErrors('valorTotalVenda')}" th:errors="*{valorTotalVenda}" class="text-danger"></span>
+                    </div>
+		        </div>
+        
+		        <th:block layout:insert="fragments/audit-form"></th:block>
+        		
+        		<!-- Divider -->
+            	<hr class="sidebar-divider">
+				
+				<h4 class="h4 mb-4 text-gray-800" >Endereço</h4>
+				
+				<div class="row">
+					<div class="form-group col-md-6">
+						<label for="enderecoEntrega.logradouro" class="col-form-label">Logradouro</label>
+                        <input type="text" th:field="*{enderecoEntrega.logradouro}" class="form-control text-uppercase" id="enderecoEntrega.logradouro" placeholder="Logradouro">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('enderecoEntrega.logradouro')}" th:errors="*{enderecoEntrega.logradouro}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="enderecoEntrega.numero" class="col-form-label">Numero</label>
+                        <input type="text" th:field="*{enderecoEntrega.numero}" class="form-control text-uppercase" id="enderecoEntrega.numero" placeholder="Numero">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('enderecoEntrega.numero')}" th:errors="*{enderecoEntrega.numero}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="enderecoEntrega.bairro" class="col-form-label">Bairro</label>
+                        <input type="text" th:field="*{enderecoEntrega.bairro}" class="form-control text-uppercase" id="enderecoEntrega.bairro" placeholder="Bairro">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('enderecoEntrega.bairro')}" th:errors="*{enderecoEntrega.bairro}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="enderecoEntrega.cidade" class="col-form-label">Cidade</label>
+                        <input type="text" th:field="*{enderecoEntrega.cidade}" class="form-control text-uppercase" id="enderecoEntrega.cidade" placeholder="Cidade">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('enderecoEntrega.cidade')}" th:errors="*{enderecoEntrega.cidade}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="enderecoEntrega.estado" class="col-form-label">Estado</label>
+                        <input type="text" th:field="*{enderecoEntrega.estado}" class="form-control text-uppercase" id="enderecoEntrega.numero" placeholder="Estado">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('enderecoEntrega.estado')}" th:errors="*{enderecoEntrega.estado}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="enderecoEntrega.cep" class="col-form-label">CEP</label>
+                        <input type="text" th:field="*{enderecoEntrega.cep}" class="form-control" data-mask="00000-000" id="enderecoEntrega.cep" placeholder="CEP">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('enderecoEntrega.cep')}" th:errors="*{enderecoEntrega.cep}"></div>
+					</div>
+				</div>
+        		
+        		<!-- Divider -->
+            	<hr class="sidebar-divider">
+				
+				<h4 class="h4 mb-4 text-gray-800" >Produtos</h4>
+        		
+		        <div class="row">
+		            <div class="col-md-12">
+	                	<div class="table-responsive">
+			                <table class="table table-bordered table-striped">
+								<thead>
+									<tr>
+			                            <th>#</th>
+			                            <th>Código</th>
+			                            <th>Nome do Produto</th>
+			                            <th>Valor de Custo</th>
+			                            <th>Valor de Venda</th>
+									</tr>
+								</thead>
+			                    <tbody>
+			                    	<tr th:if="${availableProdutos.empty}">
+						            	<td colspan="5" th:text="#{manutencao.processo.label.not-found}" ></td>
+							        </tr>
+			                        <tr th:each="produtoIndex, produtoStat : ${availableProdutos}">
+			                        	<td>
+					                        <input type="checkbox"
+					                               th:name="|produtos[${produtoStat.index}]|"
+					                               th:value="${produtoIndex.idEstruturaProduto}"
+					                               th:valorcusto="${produtoIndex.produto.valorCusto}"
+			                               		   th:valorvenda="${produtoIndex.produto.valorVenda}"
+					                               th:field="*{produtos[__${produtoStat.index}__]}"
+					                               class="checkProduto" />
+					                    </td>
+										<td th:text="${produtoIndex.produto.codigo}"></td>
+			                            <td th:text="${produtoIndex.produto.nomeProduto}"></td>
+			                            <td th:text="${produtoIndex.produto.valorCusto}"></td>
+			                            <td th:text="${produtoIndex.produto.valorVenda}"></td>
+			                        </tr>
+			                    </tbody>
+			                </table>
+			            </div>
+		            </div>
+		        </div>
+			</div>
+		</div>
+    </form>
+</th:block>
+
+<th:block layout:fragment="script-post">
+	<script>
+
+		$(document).ready(function () {
+			$(".checkProduto").change(function() {
+				
+				if ($('#valorTotalCusto').val() == '') {
+					$('#valorTotalCusto').val('0');
+				}
+				
+				if ($('#valorTotalVenda').val() == '') {
+					$('#valorTotalVenda').val('0');
+				}
+				
+				var valorCustoTotalFloat = 0.00; 
+				var valorVendaTotalFloat = 0.00;
+				
+			    if(this.checked) {
+					valorCustoTotalFloat = parseFloat($('#valorTotalCusto').val()) + parseFloat($(this).attr('valorcusto'));
+					valorVendaTotalFloat = parseFloat($('#valorTotalVenda').val()) + parseFloat($(this).attr('valorvenda'));
+			    } else {
+					valorCustoTotalFloat = parseFloat($('#valorTotalCusto').val()) - parseFloat($(this).attr('valorcusto'));
+					valorVendaTotalFloat = parseFloat($('#valorTotalVenda').val()) - parseFloat($(this).attr('valorvenda'));
+				}
+				
+				$('#valorTotalCusto').val(valorCustoTotalFloat);
+			    $('#valorTotalVenda').val(valorVendaTotalFloat);
+			});
+		});
+	</script>
+</th:block>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layouts/template-logado}">
+
+<th:block layout:fragment="breadcrumb">
+	<div class="d-flex justify-content-between align-items-center">
+	  <ol>
+	    <li><a href="/index" th:text="#{company.name}"></a></li>
+	    <li th:text="#{manutencao.default.label}" ></li >
+	    <li th:text="#{manutencao.usuario.label}"></li >
+	    <li th:text="#{manutencao.listagem.label}"></li >
+	  </ol>
+	</div>	
+</th:block>
+
+<th:block layout:fragment="page_content">
+	<form id="searchForm" action="#" th:action="@{/usuario/search}" th:object="${principalObject}" method="post">
+		
+		<input type="hidden" th:field="*{size}" class="form-control" id="size" />
+		<input type="hidden" th:field="*{pageNumber}" class="form-control" id="pageNumber" />
+		
+		<!-- Page Heading -->
+	    <h1 class="h3 mb-4 text-gray-800" th:text="#{manutencao.usuario.label.h2}"></h1>
+	
+	    <!-- DataTales Example -->
+	    <div class="card shadow mb-4">
+	        <div class="card-header py-3 float-right">
+	            <div class="col-md-1 float-right">
+					<a href="/usuario/show-form" class="btn btn-primary" th:text="#{manutencao.default.button.adicionar}"></a>
+	            </div>
+	        </div>
+	        
+			<div class="card-body">
+				<div class="input-group">
+					<div class="form-inline mr-1">
+						<input type="text" th:field="*{usuario.username}" class="form-control" id="usuario.username" placeholder="Username">
+					</div>
+					<div class="form-inline mr-1">
+						<input type="text" th:field="*{usuario.name}" class="form-control text-uppercase" id="usuario.username" placeholder="Nome">
+					</div>
+					<button type="submit" class="btn btn-primary mr-1">
+						Pesquisar
+					</button>
+				</div>
+			</div>
+			
+	        <div class="card-body">
+	            <div class="table-responsive">
+	                <table class="table table-bordered table-striped">
+	                    <thead>
+	                        <tr>
+	                            <th>Login</th>
+	                            <th>Nome</th>
+	                            <th th:if="${#authorization.expression('getPrincipal().isAdministrador()')}" >tipo Acesso</th >
+	                            <th>Status</th>
+	                            <th:block layout:insert="fragments/audit-list-header"></th:block>
+	                            <th>Actions</th >
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                    	<tr th:if="${principalList.empty}">
+					            <td colspan="8" th:text="#{manutencao.usuario.label.not-found}" ></td>
+					        </tr>
+	                        <tr th:each="objectReturn : ${principalList}">
+	                            <td th:text="${objectReturn.username}"></td>
+	                            <td th:text="${objectReturn.name}"></td>
+	                            <td th:if="${#authorization.expression('getPrincipal().isAdministrador()')}" th:text="${objectReturn.tipoAcesso}"></td>
+	                            <td th:text="${objectReturn.enabled}"></td>
+	                            <th:block layout:insert="fragments/audit-list-fields"></th:block>
+	                            <td>
+		                            <a th:href="@{/usuario/edit/{id}(id=${objectReturn.id})}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+		                            <a th:href="@{/usuario/delete/{id}(id=${objectReturn.id})}" class="btn btn-primary"><i class="fas fa-trash-alt"></i></a>
+	                            </td >
+	                        </tr>
+	                    </tbody>
+	                    <th:block layout:insert="fragments/pageable-list-footer(colspan=8)"></th:block>
+	                </table>
+	                
+	            </div>
+	        </div>
+	    </div>
+    </form >
+</th:block>
+
+<th:block layout:fragment="script-post">
+	<script>
+
+		$(document).ready(function () {
+			$('.page-link').click(function (event) {
+
+				var size = $(this).attr("size");
+				var pageNumber = $(this).attr("pagenumber");
+				
+				$('#pageNumber').val(pageNumber)
+				$('#size').val(size)
+				$('#searchForm').attr('action', '/usuario/paginate');
+				$('#searchForm').submit();
+			});
+		});
+	</script>
+</th:block>

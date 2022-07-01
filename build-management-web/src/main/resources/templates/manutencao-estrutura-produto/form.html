@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layouts/template-logado}">
+
+<div layout:fragment="breadcrumb">
+	<div class="d-flex justify-content-between align-items-center">
+	  <ol>
+	    <li><a href="/index" th:text="#{company.name}"></a></li>
+	    <li th:text="#{manutencao.default.label}" ></li >
+	    <li th:text="#{manutencao.cliente.label}"></li >
+	    <li th:text="#{manutencao.formulario.label}"></li >
+	  </ol>
+	</div>	
+</div >
+
+
+<th:block layout:fragment="page_content">
+    <form action="#" th:action="${estruturaProduto.idEstruturaProduto == null} ? @{/estrutura-produto/add} : @{/estrutura-produto/update/{id}(id=${estruturaProduto.idEstruturaProduto})}" th:object="${estruturaProduto}" method="post">
+		 <input type="hidden" th:field="*{idEstruturaProduto}" id="idEstruturaProduto" />
+		<input type="hidden" th:field="*{produto.idProduto}" id="produto.idProduto" />
+		
+		<!-- Page Heading -->
+		<h1 class="h3 mb-4 text-gray-800" th:text="#{manutencao.produto.label.h2}"></h1>
+	
+	
+		<!-- DataTales Example -->
+		<div class="card shadow mb-5">
+			<div class="card-header py-3">
+				<div class="col-md-4 float-right">
+					<input type="submit" class="btn btn-primary float-right" value="Salvar">
+					<a href="/estrutura-produto/list" class="btn btn-primary float-right mr-1"
+						th:text="#{manutencao.default.button.voltar}"></a>
+				</div>
+			</div>
+
+			<div class="card-body">
+                <div class="row">
+                	<div class="form-group col-md-6">
+                        <label for="produto.codigo" class="col-form-label">Código do Produto</label>
+                        <input type="text" th:field="*{produto.codigo}" class="form-control" id="produto.codigo" required placeholder="Código do Produto">
+                        <span th:if="${#fields.hasErrors('produto.codigo')}" th:errors="*{produto.codigo}" class="text-danger"></span>
+                    </div>
+                	
+                	<div class="form-group col-md-6">
+                        <label for="produto.nomeProduto" class="col-form-label">Nome do Produto</label>
+                        <input type="text" th:field="*{produto.nomeProduto}" class="form-control" id="produto.nomeProduto" required placeholder="Nome do Produto">
+                        <span th:if="${#fields.hasErrors('produto.nomeProduto')}" th:errors="*{produto.nomeProduto}" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                        <label for="produto.status" class="col-form-label">Status</label>
+                        <select type="text" th:field="*{produto.status}" required class="form-control" id="produto.status">
+                        	<option value="" >Selecione</option>
+                        	<option value="ATIVO" >ATIVO</option>
+                        	<option value="INATIVO" >INATIVO</option>
+                        </select  >
+                        <span th:if="${#fields.hasErrors('produto.status')}" th:errors="*{produto.status}" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    
+                    <div class="form-group col-md-6">
+                        <label for="produto.valorCusto" class="col-form-label">Valor de Custo</label>
+                        <input type="text" th:field="*{produto.valorCusto}" class="form-control" disabled id="produto-valorCusto" required >
+                        <span th:if="${#fields.hasErrors('produto.valorCusto')}" th:errors="*{produto.valorCusto}" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                        <label for="produto.valorVenda" class="col-form-label">Valor de Venda</label>
+                        <input type="text" th:field="*{produto.valorVenda}" class="form-control" disabled id="produto-valorVenda" required >
+                        <span th:if="${#fields.hasErrors('produto.valorVenda')}" th:errors="*{produto.valorVenda}" class="text-danger"></span>
+                    </div>
+		        </div>
+        
+		        <th:block layout:insert="fragments/audit-form"></th:block>
+        		
+        		<!-- Divider -->
+            	<hr class="sidebar-divider">
+				
+				<h4 class="h4 mb-4 text-gray-800" >Estrutura do Produto</h4>
+        		
+		        <div class="row">
+		            <div class="col-md-6">
+		                <h4 >Processos</h4>    
+	                	<div class="table-responsive">
+			                <table class="table table-bordered table-striped">
+								<thead>
+									<tr>
+			                            <th>#</th>
+			                            <th>Código</th>
+			                            <th>Nome do Processo</th>
+			                            <th>Valor de Custo</th>
+			                            <th>Valor de Venda</th>
+									</tr>
+								</thead>
+			                    <tbody>
+			                    	<tr th:if="${availableProcessos.empty}">
+						            	<td colspan="5" th:text="#{manutencao.processo.label.not-found}" ></td>
+							        </tr>
+			                        <tr th:each="processoIndex, processoStat : ${availableProcessos}">
+			                        	<td>
+					                        <input type="checkbox"
+					                               th:name="|processos[${processoStat.index}]|"
+					                               th:value="${processoIndex.idProcesso}"
+					                               th:valorcusto="${processoIndex.valorCusto}"
+			                               		   th:valorvenda="${processoIndex.valorVenda}"
+					                               th:field="*{processos[__${processoStat.index}__]}"
+					                               class="checkProcesso" />
+					                    </td>
+										<td th:text="${processoIndex.codigo}"></td>
+			                            <td th:text="${processoIndex.nomeProcesso}"></td>
+			                            <td th:text="${processoIndex.valorCusto}"></td>
+			                            <td th:text="${processoIndex.valorVenda}"></td>
+			                        </tr>
+			                    </tbody>
+			                </table>
+			            </div>
+		            </div>
+		            <div class="col-md-6">
+		                <h4 >Componentes</h4>    
+	                	<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+		                            <th>#</th>
+		                            <th>Código</th>
+		                            <th>Nome do Componente</th>
+		                            <th>Valor de Custo</th>
+		                            <th>Valor de Venda</th>
+								</tr>
+							</thead>
+		                    <tbody>
+		                    	<tr th:if="${availableComponentes.empty}">
+					            	<td colspan="5" th:text="#{manutencao.componente.label.not-found}" ></td>
+						        </tr>
+		                        <tr th:each="componenteIndex, componenteStat : ${availableComponentes}">
+									<td>
+				                        <input type="checkbox"
+			                               th:name="|componentes[${componenteStat.index}]|"
+			                               th:value="${componenteIndex.idComponente}"
+			                               th:valorcusto="${componenteIndex.valorCusto}"
+			                               th:valorvenda="${componenteIndex.valorVenda}"
+			                               th:field="*{componentes[__${componenteStat.index}__]}"
+			                               class="checkComponente"
+			                                />
+				                    </td>
+									<td th:text="${componenteIndex.codigo}"></td>
+									<td th:text="${componenteIndex.nomeComponente}"></td>
+									<td th:text="${componenteIndex.valorCusto}"></td>
+									<td th:text="${componenteIndex.valorVenda}"></td>
+		                        </tr>
+		                    </tbody>
+		                </table>
+		            </div>
+		        </div>
+			</div>
+		</div>
+    </form>
+</th:block>
+
+<th:block layout:fragment="script-post">
+	<script>
+
+		$(document).ready(function () {
+			$(".checkComponente, .checkProcesso").change(function() {
+				
+				if ($('#produto-valorCusto').val() == '') {
+					$('#produto-valorCusto').val('0');
+				}
+				
+				if ($('#produto-valorVenda').val() == '') {
+					$('#produto-valorVenda').val('0');
+				}
+				
+				var valorCustoTotalFloat = 0.00; 
+				var valorVendaTotalFloat = 0.00;
+				
+			    if(this.checked) {
+					valorCustoTotalFloat = parseFloat($('#produto-valorCusto').val()) + parseFloat($(this).attr('valorcusto'));
+					valorVendaTotalFloat = parseFloat($('#produto-valorVenda').val()) + parseFloat($(this).attr('valorvenda'));
+			    } else {
+					valorCustoTotalFloat = parseFloat($('#produto-valorCusto').val()) - parseFloat($(this).attr('valorcusto'));
+					valorVendaTotalFloat = parseFloat($('#produto-valorVenda').val()) - parseFloat($(this).attr('valorvenda'));
+				}
+				
+				$('#produto-valorCusto').val(valorCustoTotalFloat);
+			    $('#produto-valorVenda').val(valorVendaTotalFloat);
+			});
+		});
+	</script>
+</th:block>

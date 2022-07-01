@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layouts/template-logado}">
+
+<div layout:fragment="breadcrumb">
+	<div class="d-flex justify-content-between align-items-center">
+	  <ol>
+	    <li><a href="/index" th:text="#{company.name}"></a></li>
+	    <li th:text="#{manutencao.default.label}" ></li >
+	    <li th:text="#{manutencao.cliente.label}"></li >
+	    <li th:text="#{manutencao.formulario.label}"></li >
+	  </ol>
+	</div>	
+</div >
+
+
+<th:block layout:fragment="page_content">
+	<form action="#" th:action="${cliente.idCliente == null} ? @{/cliente/add} : @{/cliente/update/{id}(id=${cliente.idCliente})}" th:object="${cliente}" method="post">
+        <input type="hidden" th:field="*{idCliente}" id="idCliente" />
+		<!-- Page Heading -->
+		<h1 class="h3 mb-4 text-gray-800" th:text="#{manutencao.cliente.label.h2}"></h1>
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-5">
+			<div class="card-header py-3">
+				<div class="col-md-4 float-right">
+					<input type="submit" class="btn btn-primary float-right" value="Salvar">
+					<a href="/cliente/list" class="btn btn-primary float-right mr-1"
+						th:text="#{manutencao.default.button.voltar}"></a>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<input type="hidden" th:field="*{idCliente}" id="idCliente" />
+			
+				<div class="row">
+					<div class="form-group col-md-6">
+						<label for="cnpjCpf" class="col-form-label">Código</label>
+                        <input type="text" th:field="*{cnpjCpf}" class="form-control text-uppercase" id="cnpjCpf" required placeholder="CNPJ/CPF">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('cnpjCpf')}" th:errors="*{cnpjCpf}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="nomeCliente" class="col-form-label">Nome Cliente</label>
+                        <input type="text" th:field="*{nomeCliente}" class="form-control text-uppercase" id="nomeCliente" required placeholder="Nome do Cliente">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('nomeCliente')}" th:errors="*{nomeCliente}"></div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="status" class="col-form-label">Status</label>
+						<select type="text" th:field="*{status}" required class="form-control" id="status">
+							<option value="">Selecione</option>
+							<option value="ATIVO">ATIVO</option>
+							<option value="INATIVO">INATIVO</option>
+						</select>
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+					</div>
+				</div>
+			
+				<th:block layout:insert="fragments/audit-form"></th:block>
+				
+				<!-- Divider -->
+            	<hr class="sidebar-divider">
+				
+				<h4 class="h4 mb-4 text-gray-800" >Endereço</h4>
+				
+				<div class="row">
+					<div class="form-group col-md-6">
+						<label for="endereco.logradouro" class="col-form-label">Logradouro</label>
+                        <input type="text" th:field="*{endereco.logradouro}" class="form-control text-uppercase" id="endereco.logradouro" placeholder="Logradouro">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('endereco.logradouro')}" th:errors="*{endereco.logradouro}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="endereco.numero" class="col-form-label">Numero</label>
+                        <input type="text" th:field="*{endereco.numero}" class="form-control text-uppercase" id="endereco.numero" placeholder="Numero">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('endereco.numero')}" th:errors="*{endereco.numero}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="endereco.bairro" class="col-form-label">Bairro</label>
+                        <input type="text" th:field="*{endereco.bairro}" class="form-control text-uppercase" id="endereco.bairro" placeholder="Bairro">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('endereco.bairro')}" th:errors="*{endereco.bairro}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="endereco.cidade" class="col-form-label">Cidade</label>
+                        <input type="text" th:field="*{endereco.cidade}" class="form-control text-uppercase" id="endereco.cidade" placeholder="Cidade">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('endereco.cidade')}" th:errors="*{endereco.cidade}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="endereco.estado" class="col-form-label">Estado</label>
+                        <input type="text" th:field="*{endereco.estado}" class="form-control text-uppercase" id="endereco.numero" placeholder="Estado">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('endereco.estado')}" th:errors="*{endereco.estado}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="endereco.cep" class="col-form-label">CEP</label>
+                        <input type="text" th:field="*{endereco.cep}" class="form-control" data-mask="00000-000" id="endereco.cep" placeholder="CEP">
+						<div class="alert alert-warning invalid-tooltip active" th:if="${#fields.hasErrors('endereco.cep')}" th:errors="*{endereco.cep}"></div>
+					</div>
+					
+				</div>
+				
+				<!-- Divider -->
+            	<hr class="sidebar-divider">
+				
+				<h4 class="h4 mb-4 text-gray-800" >Contato</h4>
+				
+				<div class="row">
+					
+					<div class="form-group col-md-6">
+						<label for="contato.celular" class="col-form-label">Celular</label>
+                        <input type="text" th:field="*{contato.celular}" class="form-control" data-mask="(00) 00000-0000" id="contato.celular" placeholder="Celular">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('contato.celular')}" th:errors="*{contato.celular}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="contato.telefone" class="col-form-label">Telefone</label>
+                        <input type="text" th:field="*{contato.telefone}" class="form-control" data-mask="(00) 0000-0000" id="contato.telefone" placeholder="Telefone">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('contato.telefone')}" th:errors="*{contato.telefone}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="contato.nomeContato" class="col-form-label">Nome Contato</label>
+                        <input type="text" th:field="*{contato.nomeContato}" class="form-control text-uppercase" id="contato.nomeContato" placeholder="Nome Contato">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('contato.nomeContato')}" th:errors="*{contato.nomeContato}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="contato.email" class="col-form-label">E-mail</label>
+                        <input type="text" th:field="*{contato.email}" required class="form-control text-uppercase" id="contato.email" placeholder="E-mail">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('contato.email')}" th:errors="*{contato.email}"></div>
+					</div>
+				</div>
+			</div>
+	</form>
+</th:block>

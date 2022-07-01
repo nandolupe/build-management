@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<th:block layout:fragment="pageable-list-footer(colspan)">
+	<tfooter >
+        	<tr>
+        		<td th:colspan="${colspan}">
+                	<nav aria-label="..." th:if="${principalList.totalPages > 0}" class="justify-content-center" >
+					    <ul class="pagination justify-content-center">
+						    <li>
+							    
+							      <a href="#" 
+							      	th:if="${principalList.number > 0}"
+							      	th:size="${principalList.size}" 
+								    th:pageNumber="${(principalList.number + 1) - 1}" 
+							        class="btn btn-primary page-link" th:text="#{manutencao.listagem.paginacao.page.previous}" ></a  >
+							        
+						    </li>
+						    <th:block th:each="i: ${#numbers.sequence(0, principalList.totalPages - 1)}" >
+							    <li th:class="${pageNumber==principalList.number} ? 'active'">
+							    
+							      <a href="#" 
+							      th:if="${principalList.number == i}"
+							      	th:size="${principalList.size}" 
+								    th:pageNumber="${i+1}" 
+							        th:text=${i+1} 
+							        class="btn btn-primary page-link active" ></a  >
+							        
+							        <a href="#" 
+								      th:unless="${principalList.number == i}" 
+								      th:size="${principalList.size}" 
+								      th:pageNumber="${i+1}"
+								        th:text=${i+1} 
+								        class="btn btn-primary page-link ml-1" ></a  >
+							    </li>
+						    </th:block>
+						    <li>
+							      <a href="#" 
+							      	th:if="${(principalList.number + 1) < principalList.totalPages}"
+							      	th:size="${principalList.size}" 
+								    th:pageNumber="${principalList.number + 2}" 
+							        class="btn btn-primary page-link" th:text="#{manutencao.listagem.paginacao.page.next}" ></a  >
+							        
+						    </li>
+					    </ul>
+					</nav>
+				</td >
+        	</tr>
+        </tfooter >
+</th:block>

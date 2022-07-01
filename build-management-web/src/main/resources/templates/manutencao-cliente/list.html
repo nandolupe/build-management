@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layouts/template-logado}">
+
+<div layout:fragment="breadcrumb">
+	<div class="d-flex justify-content-between align-items-center">
+	  <ol>
+	    <li><a href="/index" th:text="#{company.name}"></a></li>
+	    <li th:text="#{manutencao.default.label}" ></li >
+	    <li th:text="#{manutencao.cliente.label}"></li >
+	    <li th:text="#{manutencao.listagem.label}"></li >
+	  </ol>
+	</div>	
+</div >
+
+
+<th:block layout:fragment="page_content">
+	<form id="searchForm" action="#" th:action="@{/cliente/search}" th:object="${principalObject}" method="post">
+		
+		<input type="hidden" th:field="*{size}" class="form-control" id="size" />
+		<input type="hidden" th:field="*{pageNumber}" class="form-control" id="pageNumber" />
+		
+		<!-- Page Heading -->
+	    <h1 class="h3 mb-4 text-gray-800" th:text="#{manutencao.cliente.label.h2}"></h1>
+	
+	    <!-- DataTales Example -->
+	    <div class="card shadow mb-4">
+	        <div class="card-header py-3 float-right">
+	            <div class="col-md-1 float-right">
+					<a href="/cliente/show-form" class="btn btn-primary" th:text="#{manutencao.default.button.adicionar}"></a>
+	            </div>
+	        </div>
+	        
+			<div class="card-body">
+				<div class="input-group">
+					<div class="form-inline mr-1">
+						<input type="text" th:field="*{data.cnpjCpf}" class="form-control text-uppercase" id="data.cnpjCpf" placeholder="CPF/CNPJ">
+					</div>
+					<div class="form-inline mr-1">
+						<input type="text" th:field="*{data.nomeCliente}" class="form-control text-uppercase" id="data.nomeCliente" placeholder="Nome do Cliente">
+					</div>
+					<button type="submit" class="btn btn-primary mr-1">
+						Pesquisar
+					</button>
+				</div>
+			</div>
+			
+	        <div class="card-body">
+	            <div class="table-responsive">
+	                <table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+	                            <th>CPF/CNPJ</th>
+	                            <th>Nome do Cliente</th>
+	                            <th>Status</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+	                    <tbody>
+	                    	<tr th:if="${principalList.empty}">
+				            	<td colspan="4" th:text="#{manutencao.cliente.label.not-found}" ></td>
+					        </tr>
+	                        <tr th:each="objectReturn : ${principalList}">
+								<td th:text="${objectReturn.cnpjCpf}"></td>
+	                            <td th:text="${objectReturn.nomeCliente}"></td>
+	                            <td th:text="${objectReturn.status}"></td>
+	                            <td>
+	                            	<a th:href="@{/cliente/copy/{id}(id=${objectReturn.idCliente})}" class="btn btn-primary"><i class="fas fa-copy"></i></a>
+	                            	<a th:href="@{/cliente/edit/{id}(id=${objectReturn.idCliente})}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+	                            	<a th:href="@{/cliente/delete/{id}(id=${objectReturn.idCliente})}" class="btn btn-primary"><i class="fas fa-trash-alt"></i></a>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+	                    <th:block layout:insert="fragments/pageable-list-footer(colspan=4)"></th:block>
+	                </table>
+	            </div>
+	        </div>
+	    </div>
+    </form >
+</th:block>
+
+<th:block layout:fragment="script-post">
+	<script>
+
+		$(document).ready(function () {
+			$('.page-link').click(function (event) {
+
+				var size = $(this).attr("size");
+				var pageNumber = $(this).attr("pagenumber");
+				
+				$('#pageNumber').val(pageNumber)
+				$('#size').val(size)
+				$('#searchForm').attr('action', '/cliente/paginate');
+				$('#searchForm').submit();
+			});
+		});
+	</script>
+</th:block>

@@ -1,0 +1,1 @@
+INSERT INTO EMPRESA ('idEmpresa', 'cnpjCpf', 'razaoSocial', 'nomeFantasia') values (1, '5644656', 'carga inicial 1', 'carga inicial 1');

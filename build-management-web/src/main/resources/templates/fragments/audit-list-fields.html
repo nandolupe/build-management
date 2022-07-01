@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<th:block layout:fragment="audit-list-fields">
+	<td th:text="${objectReturn.criadoPor}"></td>
+    <td th:text="${#temporals.format(objectReturn.dtCriacao, 'dd/MM/yyyy HH:mm')}"></td>
+    <td th:text="${objectReturn.alteradoPor}"></td>
+    <td th:text="${#temporals.format(objectReturn.dtAlteracao, 'dd/MM/yyyy HH:mm')}"></td>
+</th:block>

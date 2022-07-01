@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layouts/template-logado}">
+
+<div layout:fragment="breadcrumb">
+	<div class="d-flex justify-content-between align-items-center">
+	  <ol>
+	    <li><a href="/index" th:text="#{company.name}"></a></li>
+	    <li th:text="#{manutencao.default.label}" ></li >
+	    <li th:text="#{manutencao.orcamento.label}"></li >
+	    <li th:text="#{manutencao.listagem.label}"></li >
+	  </ol>
+	</div>	
+</div >
+
+
+<th:block layout:fragment="page_content">
+	<form id="searchForm" action="#" th:action="@{/orcamento/search}" th:object="${principalObject}" method="post">
+		
+		<input type="hidden" th:field="*{size}" class="form-control" id="size" />
+		<input type="hidden" th:field="*{pageNumber}" class="form-control" id="pageNumber" />
+		
+		<!-- Page Heading -->
+	    <h1 class="h3 mb-4 text-gray-800" th:text="#{manutencao.orcamento.label.h2}"></h1>
+	
+	    <!-- DataTales Example -->
+	    <div class="card shadow mb-4">
+	        <div class="card-header py-3 float-right">
+	            <div class="col-md-1 float-right">
+					<a href="/orcamento/show-form" class="btn btn-primary" th:text="#{manutencao.default.button.adicionar}"></a>
+	            </div>
+	        </div>
+	        
+			<div class="card-body">
+				<div class="input-group ">
+					<div class="form-inline mr-1">
+						<input type="text" th:field="*{data.codigo}" class="form-control text-uppercase" id="data.codigo" placeholder="Código do Orçamento">
+					</div>
+					<div class="form-inline mr-1">
+						<input type="text" th:field="*{data.cliente.cnpjCpf}" class="form-control text-uppercase" id="data.cliente.cnpjCpf" placeholder="Nome do Cliente">
+					</div>
+					<button type="submit" class="btn btn-primary mr-1">
+						Pesquisar
+					</button>
+				</div>
+			</div>
+			
+	        <div class="card-body">
+	            <div class="table-responsive">
+	                <table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+	                            <th>Código do Orçamento</th>
+	                            <th>Nome do Produto</th>
+	                            <th>Valor Total de Custo</th>
+	                            <th>Valor Total de Venda</th>
+	                            <th>Status</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+	                    <tbody>
+	                    	<tr th:if="${principalList.empty}">
+				            	<td colspan="8" th:text="#{manutencao.orcamento.label.not-found}" ></td>
+					        </tr>
+	                        <tr th:each="objectReturn : ${principalList}">
+								<td th:text="${objectReturn.codigo}"></td>
+	                            <td th:text="${objectReturn.cliente.nomeCliente}"></td>
+	                            <td th:text="${objectReturn.valorTotalCusto}"></td>
+	                            <td th:text="${objectReturn.valorTotalVenda}"></td>
+	                            <td th:text="${objectReturn.status}"></td>
+	                            <td>
+	                            	<a th:href="@{/orcamento/copy/{id}(id=${objectReturn.idOrcamento})}" class="btn btn-primary"><i class="fas fa-copy"></i></a>
+	                            	<a href="#" th:linkto="@{/orcamento/report-by-email/{id}(id=${objectReturn.idOrcamento})}" data-toggle="modal" data-target="#emailModal" class="btn btn-primary sendemail"><i class="fas fa-envelope"></i></a>
+	                            	<a th:href="@{/orcamento/edit/{id}(id=${objectReturn.idOrcamento})}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+	                            	<a th:href="@{/orcamento/delete/{id}(id=${objectReturn.idOrcamento})}" class="btn btn-primary"><i class="fas fa-trash-alt"></i></a>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+	                    <th:block layout:insert="fragments/pageable-list-footer(colspan=8)"></th:block>
+	                </table>
+	            </div>
+	        </div>
+	    </div>
+    </form >
+    
+     <!-- E-mail Modal-->
+	<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel"
+	    aria-hidden="true">
+	    <form id="emailForm" action="#" method="get">
+	    
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="emailModalLabel">Enviar orçamento por e-mail</h5>
+	                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+		            <div class="input-group">
+						<input type="text" id="email" name="email" class="form-control text-uppercase mr-1" placeholder="E-mail" />
+						<input type="submit" class="btn btn-primary" value="Enviar" />
+		            </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+	            </div>
+	        </div>
+	    </div>
+	    </form>
+	</div>
+</th:block>
+
+<th:block layout:fragment="script-post">
+	<script>
+
+		$(document).ready(function () {
+			$('.page-link').click(function (event) {
+
+				var size = $(this).attr("size");
+				var pageNumber = $(this).attr("pagenumber");
+				
+				$('#pageNumber').val(pageNumber)
+				$('#size').val(size)
+				$('#searchForm').attr('action', '/orcamento/paginate');
+				$('#searchForm').submit();
+			});
+			
+			$('.sendemail').click(function (event) {
+	
+				$('#emailForm').attr("action", $(this).attr("linkto"));
+				
+				
+			});
+			
+			
+		});
+	</script>
+</th:block>
+

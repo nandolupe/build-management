@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+</head>
+<body>
+<div class="container">
+    <div class="starter-template">
+        <h1>Access is denied</h1>
+        <div th:inline="text">Olá '[[${#httpServletRequest.remoteUser}]]', 
+                Você não tem permissão para acessar essa página .</div>
+    </div>
+</div>
+</body>
+</html>
