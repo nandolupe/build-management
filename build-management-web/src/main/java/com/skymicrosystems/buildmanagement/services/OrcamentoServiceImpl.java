@@ -21,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import com.skymicrosystems.buildmanagement.model.Empresa;
 import com.skymicrosystems.buildmanagement.model.Orcamento;
@@ -30,7 +29,6 @@ import com.skymicrosystems.buildmanagement.utils.BuildManagementUtils;
 
 import javassist.NotFoundException;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -176,9 +174,7 @@ public class OrcamentoServiceImpl {
 
 		JasperPrint empReport =
 				JasperFillManager.fillReport (
-						JasperCompileManager.compileReport(
-						ResourceUtils.getFile("classpath:reports/orcamento/orcamento-to-cliente.jrxml")
-								.getAbsolutePath()) 
+						OrcamentoServiceImpl.class.getClassLoader().getResourceAsStream("reports/orcamento/orcamento-to-cliente.jasper")
 						, empParams
 						, new JRBeanCollectionDataSource(Collections.singleton(orcamento))
 				);
@@ -193,6 +189,5 @@ public class OrcamentoServiceImpl {
 		logger.info("relatorio gerado com sucesso!");
 		
 		return file;
-		
 	}
 }

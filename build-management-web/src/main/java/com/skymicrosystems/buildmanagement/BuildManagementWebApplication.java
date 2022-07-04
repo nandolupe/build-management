@@ -1,6 +1,8 @@
 package com.skymicrosystems.buildmanagement;
 
 import java.math.BigDecimal;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.text.NumberFormat;
@@ -10,6 +12,8 @@ import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.boot.SpringApplication;
@@ -39,8 +43,10 @@ import nz.net.ultraq.thymeleaf.decorators.strategies.GroupingStrategy;
 @Sql({"/initial-datas.sql"})
 public class BuildManagementWebApplication {
 	
+	private final static Logger logger = LoggerFactory.getLogger(BuildManagementWebApplication.class);
+	
 	@Autowired
-	private Environment env = null;
+	private Environment env;
 	
 	@Autowired
 	private DatabaseInitializingServiceImpl databaseInitializingServiceImpl;
@@ -112,6 +118,68 @@ public class BuildManagementWebApplication {
 		if (Boolean.parseBoolean(env.getProperty("default.system.create-mockdata"))) {
 			databaseInitializingServiceImpl.initialMockDataBase();
 		}
+		
+		//logger.info("Existe arquivo:" + new File("/home/luiz_pereira/ambiente-de-trabalho/repositories/build-management/build-management-web/src/main/resources/reports/orcamento/orcamento-to-cliente.jasper").exists());
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("/orcamento-to-cliente.jasper").exists()); // false
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("orcamento-to-cliente.jasper").exists()); // false
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("classpath:orcamento-to-cliente.jasper").exists());
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("classpath:reports/orcamento/orcamento-to-cliente.jasper").exists());
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("classpath:../reports/orcamento/orcamento-to-cliente.jasper").exists());
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("classpath:/orcamento/orcamento-to-cliente.jasper").exists());
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("classpath:/reports/orcamento/orcamento-to-cliente.jasper").exists());
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("classpath:/static/reports/orcamento/orcamento-to-cliente.jasper").exists());
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("/static/reports/orcamento/orcamento-to-cliente.jasper").exists()); // false
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("../reports/orcamento/orcamento-to-cliente.jasper").exists()); // false
+		//logger.info("Existe arquivo:" + ResourceUtils.getFile("/reports/orcamento/orcamento-to-cliente.jasper").exists()); //false
+		
+		//logger.info("Existe arquivo:" + new DefaultResourceLoader().getResource("/reports/orcamento/orcamento-to-cliente.jasper").getFile().exists());
+		//logger.info("Existe arquivo:" + new DefaultResourceLoader().getResource("reports/orcamento/orcamento-to-cliente.jasper").getFile().exists());
+		
+		//getFileDefaultResourceLoader("reports/orcamento/orcamento-to-cliente.jasper");
+		//getFileDefaultResourceLoader("/reports/orcamento/orcamento-to-cliente.jasper");
+		//getFileDefaultResourceLoader("classpath:/reports/orcamento/orcamento-to-cliente.jasper");
+		//getFileDefaultResourceLoader("classpath:reports/orcamento/orcamento-to-cliente.jasper");
+		
+		//getFileDefaultResourceLoader("static/reports/orcamento/orcamento-to-cliente.jasper");
+		//getFileDefaultResourceLoader("/static/reports/orcamento/orcamento-to-cliente.jasper");
+		
+		//getClassLoader("reports/orcamento/orcamento-to-cliente.jasper");
+		//getClassLoader("/reports/orcamento/orcamento-to-cliente.jasper");
+
+	}
+	
+	private void getClassLoader(String filePath) {
+		try {
+			
+			logger.info("carregando arquivo");
+			//logger.info("Existe arquivo: " + new DefaultResourceLoader().getResource(filePath).getFile().exists());
+			
+			//logger.info("Existe arquivo: " + ResourceUtils.getFile(new URL(filePath)).exists());
+			
+			//logger.info("Existe arquivo:" +  getClass().getClassLoader().getResource(filePath).getFile());
+			
+			logger.info("Existe arquivo:" +  BuildManagementWebApplication.class.getClassLoader()
+					.getResourceAsStream(filePath).available());
+			
+		} catch (Exception e) {
+			logger.error(filePath + " Error: " + e.getLocalizedMessage());
+		}
+	}
+	
+	@Deprecated
+	private void getFileDefaultResourceLoader(String filePath) {
+		try {
+			
+			logger.info("carregando arquivo");
+			//logger.info("Existe arquivo: " + new DefaultResourceLoader().getResource(filePath).getFile().exists());
+			
+			//logger.info("Existe arquivo: " + ResourceUtils.getFile(new URL(filePath)).exists());
+			
+			
+		} catch (Exception e) {
+			logger.error(filePath + " Error: " + e.getLocalizedMessage());
+		}
 	}
 	
 }
+
